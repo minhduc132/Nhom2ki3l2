@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Nhom2Ki3l2.Models
 {
-    public enum Roles
+    public class Roles
     {
         SuperAdmin,
         Admin,
