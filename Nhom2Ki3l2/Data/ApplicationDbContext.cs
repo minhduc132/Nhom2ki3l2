@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Nhom2Ki3l2.Models;
 
 namespace Nhom2Ki3l2.Data
 {
@@ -27,5 +28,7 @@ namespace Nhom2Ki3l2.Data
         public DbSet<Nhom2Ki3l2.Models.SanPhamKho> SanPhamKho { get; set; }
 
         public DbSet<Nhom2Ki3l2.Models.SanPham> SanPham { get; set; }
+
+        public DbSet<Nhom2Ki3l2.Models.Roles> Roles { get; set; }
     }
 }

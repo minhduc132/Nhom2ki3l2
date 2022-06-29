@@ -7,9 +7,7 @@ namespace Nhom2Ki3l2.Models
 {
     public class Roles
     {
-        SuperAdmin,
-        Admin,
-        Moderator,
-        Basic
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

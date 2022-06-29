@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,26 +10,22 @@ using Nhom2Ki3l2.Models;
 
 namespace Nhom2Ki3l2.Controllers
 {
-    //[Authorize]
-    [AllowAnonymous]
-    public class SanPhamsController : Controller
+    public class RolesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SanPhamsController(ApplicationDbContext context)
+        public RolesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: SanPhams
-        [Authorize(Roles = "Admin,user")]
+        // GET: Roles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.SanPham.ToListAsync());
+            return View(await _context.Roles.ToListAsync());
         }
 
-        // GET: SanPhams/Details/5
-        [Authorize(Roles = "Admin,user")]
+        // GET: Roles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -38,51 +33,39 @@ namespace Nhom2Ki3l2.Controllers
                 return NotFound();
             }
 
-            var sanPham = await _context.SanPham
+            var roles = await _context.Roles
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sanPham == null)
+            if (roles == null)
             {
                 return NotFound();
             }
 
-            return View(sanPham);
+            return View(roles);
         }
 
-        // GET: SanPhams/Create
-        [Authorize(Roles = "Admin,user")]
-
+        // GET: Roles/Create
         public IActionResult Create()
         {
-
-            ViewData["KhoId"] = new SelectList(_context.Kho, "Id", "Id");
-            ViewData["HoaDonId"] = new SelectList(_context.HoaDon, "Id", "Id");
             return View();
         }
 
-        // POST: SanPhams/Create
+        // POST: Roles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,user")]
-
-        public async Task<IActionResult> Create([Bind("Id,TenSP,DonGia,MoTa,HinhAnh,TrangThai,SoLuong,IdLoaiSP")] SanPham sanPham)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Roles roles)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sanPham);
+                _context.Add(roles);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-
-            ViewData["KhoId"] = new SelectList(_context.Kho, "Id", "Id");
-            ViewData["HoaDonId"] = new SelectList(_context.HoaDon, "Id", "Id");
-            return View(sanPham);
+            return View(roles);
         }
 
-        // GET: SanPhams/Edit/5
-        [Authorize(Roles = "Admin,user")]
-
+        // GET: Roles/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -90,26 +73,22 @@ namespace Nhom2Ki3l2.Controllers
                 return NotFound();
             }
 
-            var sanPham = await _context.SanPham.FindAsync(id);
-            if (sanPham == null)
+            var roles = await _context.Roles.FindAsync(id);
+            if (roles == null)
             {
                 return NotFound();
             }
-            ViewData["KhoId"] = new SelectList(_context.Kho, "Id", "Id");
-            ViewData["HoaDonId"] = new SelectList(_context.HoaDon, "Id", "Id");
-            return View(sanPham);
+            return View(roles);
         }
 
-        // POST: SanPhams/Edit/5
+        // POST: Roles/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,user")]
-
-        public async Task<IActionResult> Edit(int id, [Bind("Id,TenSP,DonGia,MoTa,HinhAnh,TrangThai,SoLuong,IdLoaiSP")] SanPham sanPham)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Roles roles)
         {
-            if (id != sanPham.Id)
+            if (id != roles.Id)
             {
                 return NotFound();
             }
@@ -118,12 +97,12 @@ namespace Nhom2Ki3l2.Controllers
             {
                 try
                 {
-                    _context.Update(sanPham);
+                    _context.Update(roles);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SanPhamExists(sanPham.Id))
+                    if (!RolesExists(roles.Id))
                     {
                         return NotFound();
                     }
@@ -134,12 +113,10 @@ namespace Nhom2Ki3l2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(sanPham);
+            return View(roles);
         }
 
-        // GET: SanPhams/Delete/5
-        [Authorize(Roles = "Admin,user")]
-
+        // GET: Roles/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -147,32 +124,30 @@ namespace Nhom2Ki3l2.Controllers
                 return NotFound();
             }
 
-            var sanPham = await _context.SanPham
+            var roles = await _context.Roles
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sanPham == null)
+            if (roles == null)
             {
                 return NotFound();
             }
 
-            return View(sanPham);
+            return View(roles);
         }
 
-        // POST: SanPhams/Delete/5
+        // POST: Roles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,user")]
-
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var sanPham = await _context.SanPham.FindAsync(id);
-            _context.SanPham.Remove(sanPham);
+            var roles = await _context.Roles.FindAsync(id);
+            _context.Roles.Remove(roles);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SanPhamExists(int id)
+        private bool RolesExists(int id)
         {
-            return _context.SanPham.Any(e => e.Id == id);
+            return _context.Roles.Any(e => e.Id == id);
         }
     }
 }
